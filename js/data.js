@@ -16,24 +16,28 @@ const SETTINGS = {
   localRoot: 'portfolio/'
 };
 
+/* The three groups. The order here is the order they appear on the home page and the Work page.
+   color = the group's accent color, text = a version that reads well on the dark background (optional). */
 const FAMILIES = {
-  digital: 'Digital art and design',
-  three:   '3D',
-  paper:   'Paper and paint'
+  digital: { name: 'Digital art and design', color: '#7C5CFF', text: '#9078FF', blurb: 'Illustration, vector design and digital finishing.' },
+  paper:   { name: 'Paper and paint',        color: '#FF5D8F',                  blurb: 'Watercolor, drawing and mixed media, shown stage by stage.' },
+  three:   { name: '3D',                     color: '#F2A900',                  blurb: 'Modeling, texturing and real-time renders.' }
 };
 
+/* Every tool or medium. family must be digital, paper or three.
+   text = a lighter version of the color for text on the dark background (optional). */
 const MEDIUMS = [
-  { id: 'procreate',   name: 'Procreate',        family: 'digital', color: '#7C5CFF', blurb: 'Concept sketches and finished illustrations.' },
+  { id: 'procreate',   name: 'Procreate',         family: 'digital', color: '#7C5CFF', text: '#9078FF', blurb: 'Concept sketches and finished illustrations.' },
   { id: 'affinity',    name: 'Affinity Designer', family: 'digital', color: '#00A896', blurb: 'Vector logos, emotes, posters and layouts.' },
   { id: 'illustrator', name: 'Adobe Illustrator', family: 'digital', color: '#FF7A29', blurb: 'Vector art for banners, logos and apparel.' },
-  { id: 'photoshop',   name: 'Adobe Photoshop',   family: 'digital', color: '#2E6BFF', blurb: 'Digital finishing and comic pages.' },
+  { id: 'photoshop',   name: 'Adobe Photoshop',   family: 'digital', color: '#2E6BFF', text: '#5C8DFF', blurb: 'Digital finishing and comic pages.' },
+  { id: 'watercolor',  name: 'Watercolor',        family: 'paper',   color: '#FF5D8F', blurb: 'Paint on paper, shown stage by stage.' },
+  { id: 'drawing',     name: 'Drawing',           family: 'paper',   color: '#5B4FA8', text: '#9A8CF0', blurb: 'Hand-drawn work on paper.' },
+  { id: 'mixed',       name: 'Mixed media',       family: 'paper',   color: '#9BC53D', blurb: 'Physical pieces made with more than one medium.' },
   { id: 'blender',     name: 'Blender',           family: 'three',   color: '#F2A900', blurb: 'Modeling and rendering.' },
   { id: 'ue4',         name: 'Unreal Engine 4',   family: 'three',   color: '#E8446D', blurb: 'Real-time terrain and foliage tests.' },
   { id: 'substance',   name: 'Substance Painter', family: 'three',   color: '#3BB273', blurb: 'Texturing 3D props.' },
-  { id: 'magica',      name: 'MagicaVoxel',       family: 'three',   color: '#00B7D8', blurb: 'Voxel modeling.' },
-  { id: 'watercolor',  name: 'Watercolor',        family: 'paper',   color: '#FF5D8F', blurb: 'Paint on paper, shown stage by stage.' },
-  { id: 'drawing',     name: 'Drawing',           family: 'paper',   color: '#5B4FA8', blurb: 'Hand-drawn work on paper.' },
-  { id: 'mixed',       name: 'Mixed media',       family: 'paper',   color: '#9BC53D', blurb: 'Physical pieces made with more than one medium.' }
+  { id: 'magica',      name: 'MagicaVoxel',       family: 'three',   color: '#00B7D8', blurb: 'Voxel modeling.' }
 ];
 
 /* ---------- helpers for writing items ----------
@@ -58,6 +62,26 @@ const numbered = (label, list) => list.map(([f, id], n) => I(f, id, label + ' ' 
 const PROJECTS = [
 
   /* ---------------- 2026 ---------------- */
+  {
+    slug: 'book-illustrations', title: 'Book Illustrations', year: 2026,
+    tools: ['watercolor'], process: true,
+    dir: 'Book Illustrations (2026)', cover: 'Illustrations Camera.jpg',
+    phases: [
+      // No Drive ids needed: these load from the portfolio folder (source: 'local')
+      { t: 'In progress', tool: 'watercolor', items: numbered('In progress', [
+          ['Illustrations In Progress 1.jpg', null], ['Illustrations In Progress 2.jpg', null], ['Illustrations In Progress 3.jpg', null]
+        ]) },
+      { t: 'Finished pieces', tool: 'watercolor', items: [
+          I('Acorn Parcel.png', null, 'Acorn Parcel'),
+          I('Fall Curled Oak Leaf.png', null, 'Fall Curled Oak Leaf'),
+          I('Feather Quill.png', null, 'Feather Quill'),
+          I('Green Oak Leaf.png', null, 'Green Oak Leaf')
+        ] },
+      { t: 'All together', tool: 'watercolor', items: [
+          I('Illustrations Camera.jpg', null, 'The finished pieces side by side on the desk')
+        ] }
+    ]
+  },
   {
     slug: 'skate-deck-birds', title: 'Skate Deck Show: Birds', year: 2026,
     tools: ['watercolor', 'procreate'], process: true,
@@ -87,9 +111,7 @@ const PROJECTS = [
           I('Birds Paint Step 1.jpg', '1iQsb_llLodphIDLRYwBc2fduQfmn9KEp', 'Paint step 1'),
           I('Birds Paint Step 2.jpg', '1yK2tjJmAZEcKBhjpSGygEStRWJzuLIlL', 'Paint step 2'),
           I('Birds Paint Step 3.jpg', '1gZva6FKkj7ncf0QL6D7r5uSB5L6c_HBY', 'Paint step 3'),
-          I('Birds Paint Step 4.jpg', '12x7b5gW9lYe-Rnb90QuzRxlns4Mw1cOr', 'Paint step 4'),
-          // Two files in Drive share this name; a Drive download renames the second one like this:
-          I('Birds Paint Step 4 (1).jpg', '1InMTEXRWTF8nzh9BlSbOT0vzPl5reroa', 'Paint step 4, second photo')
+          I('Birds Paint Step 4.jpg', '12x7b5gW9lYe-Rnb90QuzRxlns4Mw1cOr', 'Paint step 4')
         ] },
       { t: 'Details', tool: 'watercolor', dir: 'Final Paint (Procreate Concept & Watercolor Final)',
         items: numbered('Detail', [
@@ -101,9 +123,7 @@ const PROJECTS = [
         ]) },
       { t: 'Final boards', tool: 'watercolor', dir: 'Final Paint (Procreate Concept & Watercolor Final)',
         items: [
-          I('Final Boards.jpg', '1EWWhU25vhKEi40QHHVXxx0EPPrkFP-MD', 'The finished boards'),
-          // 120 MB: compress this one (e.g. with HandBrake) before uploading to your host
-          V('Birds Final Boards.mp4', '1mN7rLthjGH5z6ws-fcptM1tcy43lWiHZ', 'The boards on video')
+          I('Final Boards.jpg', '1EWWhU25vhKEi40QHHVXxx0EPPrkFP-MD', 'The finished boards')
         ] }
     ]
   },
@@ -160,34 +180,44 @@ const PROJECTS = [
     ]
   },
   {
-    slug: 'minecraft-bee', title: 'Minecraft Bee', year: 2025, tools: ['watercolor'],
+    slug: 'minecraft-bee', title: 'Minecraft Bee', year: 2025, tools: ['watercolor'], process: true,
     dir: 'Watercolor/Minecraft Bee',        // year comes from the photo dates
-    phases: [{ t: 'Progress photos', items: numbered('Photo', [
-      ['PXL_20251121_235907983.jpg','1kndLQx6KQO_A9ldCpP-T6xls2g_ujXgJ'], ['PXL_20251121_235911944.jpg','18yWPCk5oiVpMUbjJUWKPFgL9290YOxLq'],
-      ['PXL_20251123_020600766.jpg','1UwWqsvs6SGoY6Q0-gBZnNZ7CDUMt8iOq'], ['PXL_20251123_020647441.jpg','1cXCbf-VM9KqechMoUspUht3uKmWSr1Wc'],
-      ['PXL_20251123_035930380.PORTRAIT.jpg','1xIvKL4opY2xSAKubIXO74NP4M0gxkOF7']
-    ]) }]
+    phases: [
+      { t: 'In progress', items: numbered('Photo', [
+        ['PXL_20251121_235907983.jpg','1kndLQx6KQO_A9ldCpP-T6xls2g_ujXgJ'], ['PXL_20251121_235911944.jpg','18yWPCk5oiVpMUbjJUWKPFgL9290YOxLq'],
+        ['PXL_20251123_020647441.jpg','1cXCbf-VM9KqechMoUspUht3uKmWSr1Wc']
+      ]) },
+      { t: 'Final images', items: numbered('Final', [
+        ['PXL_20251123_020600766.jpg','1UwWqsvs6SGoY6Q0-gBZnNZ7CDUMt8iOq'],
+        ['PXL_20251123_035930380.PORTRAIT.jpg','1xIvKL4opY2xSAKubIXO74NP4M0gxkOF7']
+      ]) }
+    ]
   },
   {
-    slug: 'world-snake', title: 'World Snake', year: 2025, tools: ['watercolor'],
+    slug: 'world-snake', title: 'World Snake', year: 2025, tools: ['watercolor'], process: true,
     dir: 'Watercolor/World Snake',          // year comes from the photo dates
-    phases: [{ t: 'Progress photos', items: numbered('Photo', [
-      ['original_abdf3bd9-828c-4a85-9bc5-545bbe5690dc_PXL_20251204_204309822.jpg','1tv-A2dSGMdDd3YZ7aqgVjwlexaTg0t6R'],
-      ['PXL_20251204_211003924.jpg','1voAyh3BwSdxh5gc-nt90c42ZcXcrvAWu'], ['PXL_20251204_212444749.jpg','1B_TWW6XMQMFr1FMp7oM4UbnJgHF5ReXE'],
-      ['PXL_20251204_213135186.jpg','1k7C4UyGc5l4mLVfNTfkXBkuXY3RKL94u'], ['PXL_20251204_214234129.jpg','1TYpPzFl_r1NBa6Bc9TxB5xRJJWsUFqyw'],
-      ['PXL_20251205_021338998.jpg','1FG1Gpwb9SIr-guPmMJg-0lcrup5BSF3F']
-    ]) }]
+    phases: [
+      { t: 'In progress', items: numbered('Photo', [
+        ['original_abdf3bd9-828c-4a85-9bc5-545bbe5690dc_PXL_20251204_204309822.jpg','1tv-A2dSGMdDd3YZ7aqgVjwlexaTg0t6R'],
+        ['PXL_20251204_211003924.jpg','1voAyh3BwSdxh5gc-nt90c42ZcXcrvAWu'], ['PXL_20251204_212444749.jpg','1B_TWW6XMQMFr1FMp7oM4UbnJgHF5ReXE'],
+        ['PXL_20251204_213135186.jpg','1k7C4UyGc5l4mLVfNTfkXBkuXY3RKL94u'], ['PXL_20251204_214234129.jpg','1TYpPzFl_r1NBa6Bc9TxB5xRJJWsUFqyw']
+      ]) },
+      { t: 'Final image', items: [I('PXL_20251205_021338998.jpg','1FG1Gpwb9SIr-guPmMJg-0lcrup5BSF3F', 'Final')] }
+    ]
   },
 
   /* ---------------- 2024 ---------------- */
   {
-    slug: 'maple-leaf', title: 'Maple Leaf', year: 2024, tools: ['watercolor'],
+    slug: 'maple-leaf', title: 'Maple Leaf', year: 2024, tools: ['watercolor'], process: true,
     dir: 'Watercolor/Maple Leaf',           // year comes from the photo dates
-    phases: [{ t: 'Progress photos', items: numbered('Photo', [
-      ['IMG_20240201_121411.jpg','160LV2DX35AIPeqcDOgT-6yBTzTdFa5xS'], ['IMG_20240201_140702.jpg','1hHHk4j6OmGzLwkWpH6o1-HfSGVZHLEft'],
-      ['IMG_20240202_090119.jpg','1ugPZGHykb519jhqVy4UiMcxUy8VA_ViF'], ['IMG_20240202_152741_Bokeh.jpg','1WFQhc4AD2dnTRTgfwhJbBT8TrxjOTmr8'],
-      ['IMG_20240202_154904.jpg','1HZ_d1eHouuopp4rhEoZaUbkaZ7UPAaCT'], ['IMG_20240205_084633_309.jpg','1mbgPQ4pnu_pVHSY3iveTdAqwwAeuovHE']
-    ]) }]
+    phases: [
+      { t: 'In progress', items: numbered('Photo', [
+        ['IMG_20240201_121411.jpg','160LV2DX35AIPeqcDOgT-6yBTzTdFa5xS'], ['IMG_20240201_140702.jpg','1hHHk4j6OmGzLwkWpH6o1-HfSGVZHLEft'],
+        ['IMG_20240202_090119.jpg','1ugPZGHykb519jhqVy4UiMcxUy8VA_ViF'], ['IMG_20240202_152741_Bokeh.jpg','1WFQhc4AD2dnTRTgfwhJbBT8TrxjOTmr8'],
+        ['IMG_20240202_154904.jpg','1HZ_d1eHouuopp4rhEoZaUbkaZ7UPAaCT']
+      ]) },
+      { t: 'Final image', items: [I('IMG_20240205_084633_309.jpg','1mbgPQ4pnu_pVHSY3iveTdAqwwAeuovHE', 'Final')] }
+    ]
   },
 
   /* ---------------- 2022 ---------------- */
@@ -202,7 +232,11 @@ const PROJECTS = [
         I('Millie Step 2.png', '1_Mv_uTwXhEjjzen8E8vtf4ZwyOarBPR8', 'Step 2'),
         I('Millie Step 3.png', '1ErV1iIKoZySVrhsh6f6J0X2HIRHIs6vX', 'Step 3')
       ] },
-      { t: 'Final', items: [I('SifMillie-Clear.png', '1jGx7rXPPs46jUSPdrKb0hZPVh5jqzQxn', 'Final, clear background')] }
+      { t: 'Final', items: [
+        // Step 3 is shown twice on purpose: once as a build step, once as the finished piece
+        I('Millie Step 3.png', '1ErV1iIKoZySVrhsh6f6J0X2HIRHIs6vX', 'Final, for the Twitch stream offline page'),
+        I('SifMillie-Clear.png', '1jGx7rXPPs46jUSPdrKb0hZPVh5jqzQxn', 'Alternative cat mascot pose')
+      ] }
     ]
   },
 
@@ -212,8 +246,12 @@ const PROJECTS = [
     tools: ['illustrator', 'affinity'], process: true, fit: 'contain',
     dir: 'Twitch Stream Elements (Adobe Illustrator & Affinity Designer) (2020)', cover: 'Twitch Banner.png',
     phases: [
-      { t: 'Logo', items: [I('Logo Versions.png', '1y5_TdY3WwrIJbj4rZMyf46qYFRnHGo2v', 'Logo versions')] },
-      { t: 'Color variations', dir: 'Colored Logos', tile: 'sm', items: [
+      { t: 'Logo', items: [
+        I('Logo Versions.png', '1y5_TdY3WwrIJbj4rZMyf46qYFRnHGo2v', 'Logo versions'),
+        I('IMG_20210506_134320_221.jpg', '10MyWblNucTNH4p-Dygjk6DYxwvFsa-pR', 'Logo stickers')
+      ] },
+      // tile:'native' shows these 64 px emotes at their real size on a clear background, so they stay sharp
+      { t: 'Color variations', dir: 'Colored Logos', tile: 'native', items: [
         I('Logo-Fire.png','1E_gJu6Z3Z3MLbijA-REy6_GJR1A43Mjn','Fire'), I('Logo-PastelLady.png','1hAtdLoGUK95yLfehjNJqGFk-VAPggiIL','Pastel Lady'),
         I('Logo-FoggyLake.png','19FcBU6CpwEOGBqa5Oc6WrwtpHwG0K3cg','Foggy Lake'), I('Logo-Mocha.png','1Avp5DwWUTI1qzG0mH_VG1OROzEHV73YD','Mocha'),
         I('Logo-Seaweed.png','19c8p_cFelxOKTz57kEvkrz7G638MLiFs','Seaweed'), I('Logo-UpsideDown.png','1nc3E5scL1VH3fcIfpHSOlTLLLKkW2i0V','Upside Down'),
@@ -235,8 +273,7 @@ const PROJECTS = [
       ] },
       { t: 'On the channel', items: [
         I('Twitch Screen-2.png', '1CcTHgsJbmp8UO4f8Ez_-uCbpgmh9Db7z', 'On screen'),
-        I('Twitch Screenshot.png', '1qAblX_rB-aCPhgqwiMn-Ge72ejlt2_As', 'Screenshot'),
-        I('IMG_20210506_134320_221.jpg', '10MyWblNucTNH4p-Dygjk6DYxwvFsa-pR', 'Photo')
+        I('Twitch Screenshot.png', '1qAblX_rB-aCPhgqwiMn-Ge72ejlt2_As', 'Screenshot')
       ] }
     ]
   },
@@ -268,15 +305,14 @@ const PROJECTS = [
 
   /* ---------------- 2017 ---------------- */
   {
-    slug: 'sun-and-moon', title: 'Sun and Moon', year: 2017, tools: ['procreate'], process: true,
+    slug: 'sun-and-moon', title: 'Sun and Moon', year: 2017, tools: ['procreate'],
     dir: 'Sun and Moon (Procreate) 2017', cover: '20190510_124132.jpg',
     phases: [
-      { t: 'Progress photos', items: numbered('Photo', [
+      { t: 'Final images', items: numbered('Final', [
         ['IMG_0012.JPG','1cWlh65dd689xdP2TCtczSLNlxKkQotUg'], ['IMG_0013.JPG','14D4gTpswLO5JrG3mYBCy1T2ZosCAQ9RD'],
         ['20190510_123308.jpg','1TJKoCKgxmFs3w04Six5JElg-nDlAvL3j'], ['20190510_123812.jpg','19n3gD8gYMhE4THZ4tlSRj1yhrloj4w8X'],
         ['20190510_124132.jpg','1YxxZ8wA3vMACz73i83oOmUlN1ARINjZS']
-      ]) },
-      { t: 'Progress video', items: [V('Progress Video.mp4', '16B06RiJa6_AlQzbU0fTOH1JRBLtRndRu', 'Progress video')] }
+      ]) }
     ]
   },
 
@@ -302,7 +338,7 @@ const PROJECTS = [
     dir: 'Witchcraft Reddit Banner (Procreate & Adobe Illustrator)', cover: 'Witchcraft.jpg',
     phases: [{ t: 'Banner', items: [
       I('Witchcraft.jpg', '1SH3cGC3uAXdS6griQmFk2t0Nui8rn6R3', 'Banner'),
-      I('download_20200713_185043.jpg', '13Lk4gv1MkNSvKl0h-rv9XNsjTuUiVyVx', 'Banner, alternate')
+      I('download_20200713_185043.jpg', '13Lk4gv1MkNSvKl0h-rv9XNsjTuUiVyVx', 'Banner on the Witchcraft Subreddit')
     ] }]
   },
   {
@@ -345,6 +381,7 @@ const PROJECTS = [
   },
   {
     slug: 'camping-lamp', title: 'Camping Lamp', tools: ['substance'], group: '3D Bits', dir: '3D Bits',
+    cover: 'Camping Lamp (Substance Painter).jpg',
     phases: [{ t: 'Textured prop', items: [
       I('Camping Lamp (Substance Painter).jpg', '1NzDaAwhAvhF-tcDX1bpRWf3MtepYOhyF', 'Camping lamp'),
       I('Camping Lamp Bottom (Substance Painter).jpg', '1EkFaAt7UpZTDvH5tQQUGxJj2Inq-0Zxd', 'Camping lamp, bottom')

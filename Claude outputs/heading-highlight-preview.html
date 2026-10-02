@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heading highlight preview</title>
+<style>
+:root { --paper:#1F1F24; --card:#2B2B32; --ink:#EFEBE2; --muted:#A9A5B6; --line:#3B3B46; --display:'Trebuchet MS','Segoe UI',system-ui,sans-serif; --body:system-ui,-apple-system,'Segoe UI',sans-serif; }
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 16px/1.5 var(--body); }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 28px clamp(18px, 4vw, 40px) 60px; }
+h1.t { font: 800 1.4rem/1.2 var(--display); margin: 0 0 4px; }
+.sub { color: var(--muted); margin: 0 0 26px; max-width: 70ch; }
+.opt { border-top: 1px solid var(--line); padding: 22px 0 26px; }
+.tag { display: inline-block; font: 700 .72rem var(--body); letter-spacing: .08em; text-transform: uppercase; padding: 3px 12px; border-radius: 99px; background: var(--ink); color: var(--paper); margin-bottom: 4px; }
+.what { color: var(--muted); font-size: .9rem; margin: 0 0 14px; }
+.heads { display: flex; flex-wrap: wrap; gap: 14px 34px; align-items: baseline; }
+.h { margin: 0; font: 800 clamp(1.8rem, 4.4vw, 2.9rem)/1.05 var(--display); letter-spacing: -.02em; padding: 0 .12em; margin-left: -.12em; }
+
+/* A: what is built now */
+.a .h { color: var(--ink); background: linear-gradient(transparent 58%, var(--c) 58% 94%, transparent 94%); text-shadow: 0 0 .1em rgba(20,20,24,.45), 0 .02em .05em rgba(20,20,24,.5); }
+/* B: what you asked for: colored text, much lighter (pastel) highlight */
+.b .h { color: var(--t); background: linear-gradient(transparent 58%, color-mix(in srgb, var(--c) 28%, #fff) 58% 94%, transparent 94%); }
+/* C: alternative reading: colored text, soft see-through highlight of the same color */
+.c .h { color: var(--t); background: linear-gradient(transparent 58%, color-mix(in srgb, var(--c) 32%, transparent) 58% 94%, transparent 94%); }
+/* D: colored text, pastel highlight, but the letters sit on a darker version so they stay readable */
+.d .h { color: color-mix(in srgb, var(--c) 55%, #000); background: linear-gradient(transparent 58%, color-mix(in srgb, var(--c) 30%, #fff) 58% 94%, transparent 94%); }
+.d .h { color: var(--t); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="t">Work page heading: highlight options</h1>
+  <p class="sub">Same headings on the charcoal page in three treatments. B is what you described. A is what is in the site right now. C is a nearby idea in case B is hard to read.</p>
+
+  <div class="opt a"><span class="tag">A</span> <span class="what">Now: whitish text, full-strength color highlight</span>
+    <div class="heads">
+      <h2 class="h" style="--c:#7C5CFF;--t:#9078FF">Digital art and design</h2>
+      <h2 class="h" style="--c:#FF5D8F;--t:#FF5D8F">Paper and paint</h2>
+      <h2 class="h" style="--c:#F2A900;--t:#F2A900">3D</h2>
+      <h2 class="h" style="--c:#9BC53D;--t:#9BC53D">Mixed media</h2>
+      <h2 class="h" style="--c:#00B7D8;--t:#00B7D8">MagicaVoxel</h2>
+      <h2 class="h" style="--c:#5B4FA8;--t:#9A8CF0">Drawing</h2>
+    </div></div>
+
+  <div class="opt b"><span class="tag">B</span> <span class="what">Your idea: colored text, much lighter (pastel) highlight</span>
+    <div class="heads">
+      <h2 class="h" style="--c:#7C5CFF;--t:#9078FF">Digital art and design</h2>
+      <h2 class="h" style="--c:#FF5D8F;--t:#FF5D8F">Paper and paint</h2>
+      <h2 class="h" style="--c:#F2A900;--t:#F2A900">3D</h2>
+      <h2 class="h" style="--c:#9BC53D;--t:#9BC53D">Mixed media</h2>
+      <h2 class="h" style="--c:#00B7D8;--t:#00B7D8">MagicaVoxel</h2>
+      <h2 class="h" style="--c:#5B4FA8;--t:#9A8CF0">Drawing</h2>
+    </div></div>
+
+  <div class="opt c"><span class="tag">C</span> <span class="what">Colored text, soft see-through highlight (dimmer instead of lighter)</span>
+    <div class="heads">
+      <h2 class="h" style="--c:#7C5CFF;--t:#9078FF">Digital art and design</h2>
+      <h2 class="h" style="--c:#FF5D8F;--t:#FF5D8F">Paper and paint</h2>
+      <h2 class="h" style="--c:#F2A900;--t:#F2A900">3D</h2>
+      <h2 class="h" style="--c:#9BC53D;--t:#9BC53D">Mixed media</h2>
+      <h2 class="h" style="--c:#00B7D8;--t:#00B7D8">MagicaVoxel</h2>
+      <h2 class="h" style="--c:#5B4FA8;--t:#9A8CF0">Drawing</h2>
+    </div></div>
+</div>
+</body>
+</html>

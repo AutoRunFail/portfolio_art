@@ -18,7 +18,9 @@
     const f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); };
     return .2126 * f(n >> 16 & 255) + .7152 * f(n >> 8 & 255) + .0722 * f(n & 255);
   };
-  MEDIUMS.forEach(m => { m.on = lum(m.color) > .18 ? '#1D1A3B' : '#FFFFFF'; });
+  const onColor = hex => lum(hex) > .18 ? '#1D1A3B' : '#FFFFFF';
+  MEDIUMS.forEach(m => { m.on = onColor(m.color); m.t = m.text || m.color; });
+  Object.values(FAMILIES).forEach(f => { f.on = onColor(f.color); f.t = f.text || f.color; });
 
   /* tiny element builder */
   const h = (tag, props, ...kids) => {
@@ -34,7 +36,8 @@
     kids.flat().forEach(c => { if (c != null && c !== false) e.append(c.nodeType ? c : document.createTextNode(c)); });
     return e;
   };
-  const tint = m => `--c:${m.color};--on:${m.on}`;
+  /* --c = the color, --on = readable text on that color, --t = readable text color on the dark page */
+  const tint = m => `--c:${m.color};--on:${m.on};--t:${m.t || m.color}`;
   const plural = (n, w) => n + ' ' + w + (n === 1 ? '' : 's');
 
   /* ---------- prepare projects ---------- */
@@ -54,22 +57,20 @@
   set('#where', e => { e.textContent = S.places; });
   set('#mail', e => { e.textContent = S.email; e.href = 'mailto:' + S.email; });
   set('#year', e => { e.textContent = new Date().getFullYear(); });
+  /* the color strip under the nav: one stripe per tool */
+  set('#strip', e => MEDIUMS.forEach(m => e.append(h('i', { style: 'background:' + m.color }))));
   const BASE_TITLE = PAGE === 'work' ? 'Work | ' + S.name : S.name + ' | Illustration, design and 3D';
   document.title = BASE_TITLE;
 
-  /* ---------- home: the tool swatches (each opens the Work page for that tool) ---------- */
+  /* ---------- home: the tool titles, grouped (each opens the Work page for that tool) ---------- */
   if (PAGE === 'home') {
     const box = $('#chips');
-    let i = 0;
     Object.keys(FAMILIES).forEach(fam => {
-      const row = h('div', { class: 'row' });
-      MEDIUMS.filter(m => m.family === fam).forEach(m => {
-        const n = PROJECTS.filter(p => p.tools.includes(m.id)).length;
-        row.append(h('a', { class: 'swatch', href: 'work.html?m=' + m.id, style: tint(m) + ';--i:' + (i++) },
-          h('span', { class: 'blk', text: plural(n, 'project') }),
-          h('span', { class: 'nm', text: m.name })));
-      });
-      box.append(h('div', { class: 'fam' }, h('h2', { text: FAMILIES[fam] }), row));
+      const list = h('ul');
+      MEDIUMS.filter(m => m.family === fam).forEach(m =>
+        list.append(h('li', null, h('a', { href: 'work.html?m=' + m.id, style: tint(m), text: m.name }))));
+      box.append(h('div', { class: 'fam' },
+        h('h2', null, h('a', { href: 'work.html?f=' + fam, text: FAMILIES[fam].name })), list));
     });
     return;
   }
@@ -110,54 +111,62 @@
       ));
   }
 
-  /* ---------- filter chips + project grid ---------- */
-  const ALL = { color: '#F2A900', on: '#1D1A3B' };
-  let filter = 'all';
+  /* ---------- group filters + project grid ----------
+     family = 'all' or one of the FAMILIES ids.
+     medium = optional single tool (set when you arrive from a tool title on the home page). */
+  const ALL = { name: 'All projects', color: '#F2A900', on: '#1D1A3B', t: '#F2A900', blurb: 'Newest first. Pick a group above to narrow it down.' };
+  let family = 'all', medium = null;
+
+  const inFamily = (p, f) => p.tools.some(t => M[t].family === f);
 
   function renderFilters() {
     const box = $('#filters');
     box.replaceChildren();
-    const chip = (id, m, label, n) => h('button', {
-      class: 'fchip', type: 'button', 'data-f': id, 'aria-pressed': String(filter === id), style: tint(m) },
-      id === 'all' ? null : h('i'), label, h('span', { class: 'k', text: n }));
-    box.append(chip('all', ALL, 'All', PROJECTS.length));
-    Object.keys(FAMILIES).forEach(fam => {
-      const g = h('div', { class: 'fgroup', role: 'group', 'aria-label': FAMILIES[fam] });
-      MEDIUMS.filter(m => m.family === fam).forEach(m =>
-        g.append(chip(m.id, m, m.name, PROJECTS.filter(p => p.tools.includes(m.id)).length)));
-      box.append(g);
-    });
+    const chip = (id, f, label) => h('button', {
+      class: 'fchip', type: 'button', 'data-f': id, 'aria-pressed': String(family === id), style: tint(f) }, label);
+    box.append(chip('all', ALL, 'All'));
+    Object.keys(FAMILIES).forEach(id => box.append(chip(id, FAMILIES[id], FAMILIES[id].name)));
   }
 
-  /* on phones the chips scroll sideways: keep the chosen one in view */
-  function centerChip() {
-    const box = $('#filters'), on = $('.fchip[aria-pressed="true"]');
-    if (on && box.scrollWidth > box.clientWidth) box.scrollLeft = on.offsetLeft - (box.clientWidth - on.offsetWidth) / 2;
+  /* which tool's color a project's card wears in the current view */
+  function tintFor(p) {
+    if (medium) return M[medium];
+    if (family !== 'all') return p.tools.map(t => M[t]).find(m => m.family === family) || p.primary;
+    return p.primary;
   }
 
   function renderWork() {
-    const m = M[filter];
-    const list = (m ? PROJECTS.filter(p => p.tools.includes(m.id)) : PROJECTS.slice()).sort(byYear);
+    let list = PROJECTS.slice();
+    if (medium) list = list.filter(p => p.tools.includes(medium));
+    else if (family !== 'all') list = list.filter(p => inFamily(p, family));
+    list.sort(byYear);
+
     const head = $('#work-head');
-    head.setAttribute('style', tint(m || ALL));
-    head.replaceChildren(
-      h('h2', { text: m ? m.name : 'All projects' }),
-      h('p', { text: m ? m.blurb : 'Newest first. Pick a tool above to narrow it down.' }),
-      h('span', { class: 'n', text: plural(list.length, 'project') }));
-    $('#work-body').replaceChildren(...list.map(p => card(p, m || p.primary)));
+    const info = medium ? M[medium] : (family === 'all' ? ALL : FAMILIES[family]);
+    head.setAttribute('style', tint(info));
+    head.replaceChildren(...[
+      h('h2', { text: medium ? M[medium].name : info.name }),
+      h('p', { text: info.blurb }),
+      medium ? h('button', { class: 'clear', type: 'button', 'data-clear': '1', text: 'Show all ' + FAMILIES[M[medium].family].name }) : null,
+      h('span', { class: 'n', text: plural(list.length, 'project') })
+    ].filter(Boolean));
+    $('#work-body').replaceChildren(...list.map(p => card(p, tintFor(p))));
   }
 
-  function setFilter(f) {
-    filter = M[f] ? f : 'all';
-    document.querySelectorAll('.fchip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.f === filter)));
+  function setFilter(f, m) {
+    medium = M[m] ? m : null;
+    family = medium ? M[medium].family : (FAMILIES[f] ? f : 'all');
+    document.querySelectorAll('.fchip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.f === family)));
     renderWork();
-    centerChip();
-    const q = filter === 'all' ? '' : '?m=' + filter;
+    const q = medium ? '?m=' + medium : family === 'all' ? '' : '?f=' + family;
     history.replaceState(null, '', location.pathname + q + location.hash);
   }
   $('#filters').addEventListener('click', e => {
     const b = e.target.closest('.fchip');
     if (b) setFilter(b.dataset.f);
+  });
+  $('#work-head').addEventListener('click', e => {
+    if (e.target.closest('[data-clear]')) setFilter(family);   // drop the single-tool filter, keep its group
   });
 
   /* ---------- project viewer ---------- */
@@ -189,6 +198,7 @@
   function buildViewer(p) {
     const m = p.primary;
     viewer.setAttribute('style', tint(m));
+    viewer.classList.toggle('mat', p.fit === 'contain');   // light backing for transparent logos
     lbList = [];
     const seq = !!p.process && p.phases.length > 1;
     const head = h('header', { class: 'v-head' },
@@ -198,7 +208,7 @@
 
     const phases = h('div', { class: 'phases' }, p.phases.map((ph, i) => {
       const n = ph.items.length;
-      const cls = ph.tile === 'sm' ? 'sm' : n === 1 ? 'one' : n === 2 ? 'two' : n >= 8 ? 'many' : '';
+      const cls = ph.tile === 'sm' ? 'sm' : ph.tile === 'native' ? 'native' : n === 1 ? 'one' : n === 2 ? 'two' : n >= 8 ? 'many' : '';
       const shots = h('div', { class: 'shots ' + cls }, ph.items.map(it => shot(p, ph, it, n <= 2)));
       const title = p.phases.length > 1 && h('div', { class: 'p-title' }, h('h3', { text: ph.t }), ph.tool ? toolChip(M[ph.tool]) : null);
       const mine = ph.tool && M[ph.tool] ? tint(M[ph.tool]) : null;
@@ -216,6 +226,8 @@
     current = slug;
     buildViewer(p);
     if (!viewer.open) { viewer.showModal(); viewer.focus(); }
+    viewer.scrollTop = 0;                                   // always start a project at the top...
+    requestAnimationFrame(() => { viewer.scrollTop = 0; });  // ...(again after it is drawn, to be sure)
     document.documentElement.classList.add('lock');
     document.title = p.title + ' | ' + S.name;
     if (push) history.pushState(null, '', '#' + slug);
@@ -268,10 +280,11 @@
   }
   window.addEventListener('popstate', route);
 
-  const start = new URLSearchParams(location.search).get('m');
-  filter = M[start] ? start : 'all';
+  const qs = new URLSearchParams(location.search);
+  const startM = qs.get('m'), startF = qs.get('f');
+  medium = M[startM] ? startM : null;
+  family = medium ? M[medium].family : (FAMILIES[startF] ? startF : 'all');
   renderFilters();
   renderWork();
-  centerChip();
   route();
 })();
