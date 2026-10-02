@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Work | Moss Wilder</title>
+<meta name="description" content="Projects by Moss Wilder, organized by the tools used and shown step by step: Procreate, Affinity Designer, Illustrator, 3D and watercolor.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23F2A900'/%3E%3Ccircle cx='40' cy='26' r='16' fill='%23FF5D8F'/%3E%3Ccircle cx='24' cy='40' r='12' fill='%2300A896'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Instrument+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="work">
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="mark" href="index.html" id="site-name">Moss Wilder</a>
+    <ul>
+      <li><a href="about.html">About</a></li>
+      <li><a href="work.html" aria-current="page">Work</a></li>
+      <li><a href="about.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-head">
+  <span class="shape s1" aria-hidden="true"></span>
+  <span class="shape s2" aria-hidden="true"></span>
+  <div class="wrap">
+    <h1>Work</h1>
+  </div>
+</header>
+
+<main class="work">
+  <div class="wrap">
+    <div class="filters" id="filters" aria-label="Filter by tool"></div>
+    <div class="g-head" id="work-head"></div>
+    <div class="grid" id="work-body"></div>
+    <noscript><p>This portfolio needs JavaScript to show the projects.</p></noscript>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">&copy; <span id="year"></span> Moss Wilder. All artwork belongs to the artist.</div>
+</footer>
+
+<!-- project viewer -->
+<dialog id="viewer" class="viewer" tabindex="-1" aria-labelledby="v-title">
+  <div class="v-top"><button type="button" class="v-close">Close</button></div>
+  <div id="v-body"></div>
+</dialog>
+
+<!-- full-size image -->
+<dialog id="lb" class="lb" aria-label="Full-size image">
+  <div class="lb-bar"><span></span><button type="button" class="lb-btn lb-close">Close</button></div>
+  <button type="button" class="lb-btn lb-nav lb-prev" aria-label="Previous image">&#8592;</button>
+  <button type="button" class="lb-btn lb-nav lb-next" aria-label="Next image">&#8594;</button>
+  <div class="lb-in"><img id="lb-img" alt=""><p class="lb-cap" id="lb-cap"></p></div>
+</dialog>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
